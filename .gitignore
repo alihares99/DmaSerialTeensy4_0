@@ -1,0 +1,12 @@
+
+*.*
+
+!*.ino
+!*.h
+!*.cpp
+!CMakeLists.txt
+!.gitignore
+
+cmake-build-debug/*
+.idea/*
+libs/*
