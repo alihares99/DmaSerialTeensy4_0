@@ -47,8 +47,6 @@ add_executable(${project_name}
         libs/imxrt.h
         libs/interrupt.c
         libs/IntervalTimer.cpp
-        libs/IntervalTimer.h
-        libs/IPAddress.cpp
         libs/IPAddress.h
         libs/keylayouts.c
         libs/keylayouts.h
@@ -86,7 +84,6 @@ add_executable(${project_name}
         libs/WMath.cpp
         libs/WProgram.h
         libs/WString.cpp
-        libs/WString.h
         libs/yield.cpp
 
         )

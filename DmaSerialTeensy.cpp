@@ -1,6 +1,7 @@
-//
-// Created by Ali on ۱۲/۱۱/۲۰۱۹.
-//
+/**
+ * Created by Hares.
+ * You are free to use this file in any project as long as you keep my email address alihares99@gmail.com here.
+ */
 
 #include "DmaSerialTeensy.h"
 #include "Arduino.h"
@@ -241,6 +242,13 @@ DmaSerialTeensy::DmaSerialTeensy(int serialNo)
 
 
 void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
+
+    if (!txBuffer) {
+        txBuffer = new uint8_t[DMA_TX_BUFFER_SIZE];
+    }
+    if (!rxBuffer) {
+        rxBuffer = new uint8_t[DMA_RX_BUFFER_SIZE];
+    }
 
     // configure DMA channels:
     if (!dmaChannelSend) {

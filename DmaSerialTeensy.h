@@ -1,6 +1,7 @@
-//
-// Created by Ali on ۱۲/۱۱/۲۰۱۹.
-//
+/**
+ * Created by Hares.
+ * You are free to use this file in any project as long as you keep my email address alihares99@gmail.com here.
+ */
 
 #ifndef DMA_FOR_TEENSY_DMASERIALTEENSY_H
 #define DMA_FOR_TEENSY_DMASERIALTEENSY_H
@@ -17,7 +18,7 @@
 
 #define DMA_MAX_BURST_DATA_TRANSFER 511         // This is the maximum data we are putting into DMA at once
 
-class DmaSerialTeensy : public Stream{
+class DmaSerialTeensy : public Stream {
 
 private:
 
@@ -79,8 +80,8 @@ private:
     int rxPinIndex;
     int txPinIndex;
 
-    uint8_t txBuffer[DMA_TX_BUFFER_SIZE] = {0};
-    uint8_t rxBuffer[DMA_RX_BUFFER_SIZE] = {0};
+    uint8_t* txBuffer = nullptr;
+    uint8_t* rxBuffer = nullptr;
     volatile uint32_t txBufferTail;
     volatile uint32_t txBufferHead;
     volatile uint32_t txBufferCount;

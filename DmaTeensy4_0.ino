@@ -24,25 +24,20 @@ void loop() {
         last = millis();
         Serial.println("alive");
 
-        /*
         dmaSerial1.println("alive");
         dmaSerial2.println("alive");
         dmaSerial3.println("alive");
         dmaSerial4.println("alive");
         dmaSerial5.println("alive");
-        */
 
         static uint8_t led = 0;
         digitalWrite(13, led);
         led = !led;
 
-        dmaSerial1.println(dmaSerial1.available());
-        while (dmaSerial1.available()) {
-            //dmaSerial1.write(
-                    dmaSerial1.read();
-                    //);
-        }
+    }
 
+	while (dmaSerial1.available()) {
+        dmaSerial1.write(dmaSerial1.read());
     }
 
     while (dmaSerial2.available()) {
