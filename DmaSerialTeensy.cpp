@@ -7,11 +7,9 @@
 #include "Arduino.h"
 #include <cstring>
 #include <cmath>
+#include <algorithm>
 
-#define MIN(x, y)  ((x) > (y) ? (y) : (x))
-#define MAX(x, y)  ((x) > (y) ? (x) : (y))
-
-#ifdef __IMXRT1062__  // teensy 4.0
+#ifdef __IMXRT1062__  // teensy 4.0, 4.1
 
 #define IRQ_PRIORITY  64  // 0 = highest priority, 255 = lowest
 #define UART_CLOCK 24000000
@@ -30,9 +28,9 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial1Base = {
         0,
         &IMXRT_LPUART6,
         IRQ_LPUART6,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        71, // DMAMUX_SOURCE_LPUART6_RX, // this value is incorrect in imxrt.h file
-        70, // DMAMUX_SOURCE_LPUART6_TX, // this value is incorrect in imxrt.h file
+        #if defined(__IMXRT1062__)  // teensy 4.0
+        DMAMUX_SOURCE_LPUART6_RX,
+        DMAMUX_SOURCE_LPUART6_TX,
         #endif
         CCM_CCGR3,
         CCM_CCGR3_LPUART6(CCM_CCGR_ON),
@@ -49,10 +47,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial2Base = {
         1,
         &IMXRT_LPUART4,
         IRQ_LPUART4,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        69, //DMAMUX_SOURCE_LPUART4_RX, // this value is incorrect in imxrt.h file
-        68, // DMAMUX_SOURCE_LPUART4_TX, // this value is incorrect in imxrt.h file
-        #endif
+        DMAMUX_SOURCE_LPUART4_RX,
+        DMAMUX_SOURCE_LPUART4_TX,
         CCM_CCGR1,
         CCM_CCGR1_LPUART4(CCM_CCGR_ON),
         #if defined(__IMXRT1052__)
@@ -73,10 +69,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial3Base = {
         2,
         &IMXRT_LPUART2,
         IRQ_LPUART2,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        67, // DMAMUX_SOURCE_LPUART2_RX, // this value is incorrect in imxrt.h file
-        66, // DMAMUX_SOURCE_LPUART2_TX, // this value is incorrect in imxrt.h file
-        #endif
+        DMAMUX_SOURCE_LPUART2_RX,
+        DMAMUX_SOURCE_LPUART2_TX,
         CCM_CCGR0,
         CCM_CCGR0_LPUART2(CCM_CCGR_ON),
         {{15,2, &IOMUXC_LPUART2_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
@@ -92,10 +86,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial4Base = {
         3,
         &IMXRT_LPUART3,
         IRQ_LPUART3,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        5, // DMAMUX_SOURCE_LPUART3_RX, // this value is incorrect in imxrt.h file
-        4, // DMAMUX_SOURCE_LPUART3_TX, // this value is incorrect in imxrt.h file
-        #endif
+        DMAMUX_SOURCE_LPUART3_RX,
+        DMAMUX_SOURCE_LPUART3_TX,
         CCM_CCGR0,
         CCM_CCGR0_LPUART3(CCM_CCGR_ON),
         {{16,2, &IOMUXC_LPUART3_RX_SELECT_INPUT, 0}, {0xff, 0xff, nullptr, 0}},
@@ -112,8 +104,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial5Base = {
         &IMXRT_LPUART8,
         IRQ_LPUART8,
         #ifdef __IMXRT1062__  // teensy 4.0
-        73, // DMAMUX_SOURCE_LPUART8_RX, // this value is incorrect in imxrt.h file
-        72, // DMAMUX_SOURCE_LPUART8_TX, // this value is incorrect in imxrt.h file
+        DMAMUX_SOURCE_LPUART8_RX,
+        DMAMUX_SOURCE_LPUART8_TX,
         #endif
         CCM_CCGR6,
         CCM_CCGR6_LPUART8(CCM_CCGR_ON),
@@ -130,10 +122,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial6Base = {
         5,
         &IMXRT_LPUART1,
         IRQ_LPUART1,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        3, //DMAMUX_SOURCE_LPUART1_RX, // this value is incorrect in imxrt.h file
-        2, // DMAMUX_SOURCE_LPUART1_TX, // this value is incorrect in imxrt.h file
-        #endif
+        DMAMUX_SOURCE_LPUART1_RX,
+        DMAMUX_SOURCE_LPUART1_TX,
         CCM_CCGR5,
         CCM_CCGR5_LPUART1(CCM_CCGR_ON),
         {{25,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
@@ -149,10 +139,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial7Base = {
         6,
         &IMXRT_LPUART7,
         IRQ_LPUART7,
-        #ifdef __IMXRT1062__  // teensy 4.0
-        9, // DMAMUX_SOURCE_LPUART7_RX, // this value is incorrect in imxrt.h file
-        8, // DMAMUX_SOURCE_LPUART7_TX, // this value is incorrect in imxrt.h file
-        #endif
+        DMAMUX_SOURCE_LPUART7_TX,
+        DMAMUX_SOURCE_LPUART7_RX,
         CCM_CCGR5,
         CCM_CCGR5_LPUART7(CCM_CCGR_ON),
         {{28,2, &IOMUXC_LPUART7_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
@@ -209,23 +197,6 @@ void (* const DmaSerialTeensy::allTxIsr[7])() = {
         txCompleteCallback7,
 };
 
-void DmaSerialTeensy::rxCompleteCallback1() {dmaSerial1.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback2() {dmaSerial2.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback3() {dmaSerial3.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback4() {dmaSerial4.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback5() {dmaSerial5.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback6() {dmaSerial6.rxIsr();}
-void DmaSerialTeensy::rxCompleteCallback7() {dmaSerial7.rxIsr();}
-void (* const DmaSerialTeensy::allRxIsr[7])() = {
-        rxCompleteCallback1,
-        rxCompleteCallback2,
-        rxCompleteCallback3,
-        rxCompleteCallback4,
-        rxCompleteCallback5,
-        rxCompleteCallback6,
-        rxCompleteCallback7,
-};
-
 DmaSerialTeensy::DmaSerialTeensy(int serialNo)
     : serialNo(serialNo)
 {
@@ -266,9 +237,6 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
         dmaChannelReceive->source(*(uint8_t*)&serialBase->port->DATA);
         dmaChannelReceive->destinationBuffer(rxBuffer, DMA_RX_BUFFER_SIZE);
         dmaChannelReceive->triggerAtHardwareEvent(serialBase->dmaMuxSourceRx);
-        // no need for Rx interrupt:
-        // dmaChannelReceive->attachInterrupt(allRxIsr[serialNo - 1]);
-        // dmaChannelReceive->interruptAtCompletion();
         dmaChannelReceive->enable();
     }
 
@@ -430,18 +398,18 @@ size_t DmaSerialTeensy::write(char c) {
 
 size_t DmaSerialTeensy::write(const uint8_t *p, size_t len) {
 
-    int index = 0;
+    size_t index = 0;
     while (index < len) {
 
         // wait until there is free space in the buffer:
         while (DMA_TX_BUFFER_SIZE - txBufferCount == 0); //
 
         // get a chunk of data to add to the buffer
-        int chunkSize = MIN(len - index, DMA_TX_BUFFER_SIZE - txBufferCount);
+        size_t chunkSize = std::min(len - index, DMA_TX_BUFFER_SIZE - txBufferCount);
 
         // copy the data to the buffer:
-        int s1 = MIN(chunkSize, DMA_TX_BUFFER_SIZE - txBufferHead);
-        int s2 = chunkSize - s1;
+        size_t s1 = std::min(chunkSize, DMA_TX_BUFFER_SIZE - txBufferHead);
+        size_t s2 = chunkSize - s1;
         memcpy(&txBuffer[txBufferHead], &p[index], s1);
         if (s2 > 0)
             memcpy(&txBuffer[0], &p[index + s1], s2);
@@ -457,28 +425,14 @@ size_t DmaSerialTeensy::write(const uint8_t *p, size_t len) {
         if (!transmitting) {
             transmitting = true;
             __disable_irq()
-            int count = MIN(DMA_TX_BUFFER_SIZE - txBufferTail, chunkSize);
-            count = MIN(count, DMA_MAX_BURST_DATA_TRANSFER); // MIN(remaining in the buffer, len_truncate, max_burst)
+            size_t count = std::min(DMA_TX_BUFFER_SIZE - txBufferTail, chunkSize);
+            count = std::min(count, size_t(DMA_MAX_BURST_DATA_TRANSFER)); // min(remaining in the buffer, len_truncate, max_burst)
             dmaChannelSend->sourceBuffer(&txBuffer[txBufferTail], count);
             dmaChannelSend->enable();
             __enable_irq();
         }
     }
     return len;
-
-}
-
-void DmaSerialTeensy::rxIsr() {
-    dmaChannelReceive->clearInterrupt();
-
-    // no need for the Rx interrupt
-    /*
-    // move the head:
-    int count = dmaChannelReceive->TCD->BITER;
-    rxBufferHead += count;
-    if (rxBufferHead >= DMA_RX_BUFFER_SIZE)
-        rxBufferHead -= DMA_RX_BUFFER_SIZE;
-    */
 
 }
 
@@ -498,8 +452,8 @@ void DmaSerialTeensy::txIsr() {
     if (txBufferCount > 0) {
         transmitting = true;
         __disable_irq()
-        int count = MIN(DMA_TX_BUFFER_SIZE - txBufferTail, txBufferCount);
-        count = MIN(count, DMA_MAX_BURST_DATA_TRANSFER); // MIN(remaining in the buffer, txBufferCount, max_burst)
+        size_t count = std::min(size_t(DMA_TX_BUFFER_SIZE) - txBufferTail, size_t(txBufferCount));
+        count = std::min(count, size_t(DMA_MAX_BURST_DATA_TRANSFER)); // MIN(remaining in the buffer, txBufferCount, max_burst)
         dmaChannelSend->sourceBuffer(&txBuffer[txBufferTail], count);
         dmaChannelSend->enable();
         __enable_irq();

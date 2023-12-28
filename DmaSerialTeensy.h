@@ -3,8 +3,7 @@
  * You are free to use this file in any project as long as you keep my email address alihares99@gmail.com here.
  */
 
-#ifndef DMA_FOR_TEENSY_DMASERIALTEENSY_H
-#define DMA_FOR_TEENSY_DMASERIALTEENSY_H
+#pragma once
 
 #include "core_pins.h"
 #include "HardwareSerial.h"
@@ -67,25 +66,16 @@ private:
     static void txCompleteCallback7();
     static void (* const allTxIsr[7])();
 
-    static void rxCompleteCallback1();
-    static void rxCompleteCallback2();
-    static void rxCompleteCallback3();
-    static void rxCompleteCallback4();
-    static void rxCompleteCallback5();
-    static void rxCompleteCallback6();
-    static void rxCompleteCallback7();
-    static void (* const allRxIsr[7])();
-
     int serialNo;
     int rxPinIndex;
     int txPinIndex;
 
     uint8_t* txBuffer = nullptr;
     uint8_t* rxBuffer = nullptr;
-    volatile uint32_t txBufferTail;
-    volatile uint32_t txBufferHead;
-    volatile uint32_t txBufferCount;
-    volatile uint32_t rxBufferTail;
+    volatile size_t txBufferTail;
+    volatile size_t txBufferHead;
+    volatile size_t txBufferCount;
+    volatile size_t rxBufferTail;
     // volatile uint32_t rxBufferHead; // no need for this
 
     volatile bool transmitting = false;
@@ -122,4 +112,3 @@ extern DmaSerialTeensy dmaSerial5;
 extern DmaSerialTeensy dmaSerial6;
 extern DmaSerialTeensy dmaSerial7;
 
-#endif //DMA_FOR_TEENSY_DMASERIALTEENSY_H
