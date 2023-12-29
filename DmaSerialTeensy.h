@@ -31,20 +31,13 @@ private:
     } pin_info_t;
 
     typedef struct {
-        uint8_t serial_index;	// which object are we? 0 based
         IMXRT_LPUART_t* port;
-        IRQ_NUMBER_t irq;
         uint8_t dmaMuxSourceRx;
         uint8_t dmaMuxSourceTx;
         volatile uint32_t &ccm_register;
         const uint32_t ccm_value;
         pin_info_t rx_pins[cnt_rx_pins];
         pin_info_t tx_pins[cnt_tx_pins];
-        const uint8_t cts_pin;
-        const uint8_t cts_mux_val;
-        const uint16_t irq_priority;
-        const uint16_t rts_low_watermark;
-        const uint16_t rts_high_watermark;
     } Base_t;
 
     const static Base_t serial1Base;

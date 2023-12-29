@@ -11,7 +11,6 @@
 
 #ifdef __IMXRT1062__  // teensy 4.0, 4.1
 
-#define IRQ_PRIORITY  64  // 0 = highest priority, 255 = lowest
 #define UART_CLOCK 24000000
 
 #define CTRL_ENABLE 		(LPUART_CTRL_TE | LPUART_CTRL_RE)
@@ -25,26 +24,17 @@
 
 // teensy 4.0 specific board information:
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial1Base = {
-        0,
         &IMXRT_LPUART6,
-        IRQ_LPUART6,
         DMAMUX_SOURCE_LPUART6_RX,
         DMAMUX_SOURCE_LPUART6_TX,
         CCM_CCGR3,
         CCM_CCGR3_LPUART6(CCM_CCGR_ON),
         {{0,2, &IOMUXC_LPUART6_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
         {{1,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial2Base = {
-        1,
         &IMXRT_LPUART4,
-        IRQ_LPUART4,
         DMAMUX_SOURCE_LPUART4_RX,
         DMAMUX_SOURCE_LPUART4_TX,
         CCM_CCGR1,
@@ -56,94 +46,56 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial2Base = {
         {{7,2, &IOMUXC_LPUART4_RX_SELECT_INPUT, 2}, {0xff, 0xff, nullptr, 0}},
         {{8,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
         #endif
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial3Base = {
-        2,
         &IMXRT_LPUART2,
-        IRQ_LPUART2,
         DMAMUX_SOURCE_LPUART2_RX,
         DMAMUX_SOURCE_LPUART2_TX,
         CCM_CCGR0,
         CCM_CCGR0_LPUART2(CCM_CCGR_ON),
         {{15,2, &IOMUXC_LPUART2_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
         {{14,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        18, //IOMUXC_SW_MUX_CTL_PAD_GPIO_AD_B1_01, // 18
-        2, // page 473
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial4Base = {
-        3,
         &IMXRT_LPUART3,
-        IRQ_LPUART3,
         DMAMUX_SOURCE_LPUART3_RX,
         DMAMUX_SOURCE_LPUART3_TX,
         CCM_CCGR0,
         CCM_CCGR0_LPUART3(CCM_CCGR_ON),
         {{16,2, &IOMUXC_LPUART3_RX_SELECT_INPUT, 0}, {0xff, 0xff, nullptr, 0}},
         {{17,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial5Base = {
-        4,
         &IMXRT_LPUART8,
-        IRQ_LPUART8,
         DMAMUX_SOURCE_LPUART8_RX,
         DMAMUX_SOURCE_LPUART8_TX,
         CCM_CCGR6,
         CCM_CCGR6_LPUART8(CCM_CCGR_ON),
         {{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {38, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
         {{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {39, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial6Base = {
-        5,
         &IMXRT_LPUART1,
-        IRQ_LPUART1,
         DMAMUX_SOURCE_LPUART1_RX,
         DMAMUX_SOURCE_LPUART1_TX,
         CCM_CCGR5,
         CCM_CCGR5_LPUART1(CCM_CCGR_ON),
         {{25,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
         {{24,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY,
-        38,
-        24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t DmaSerialTeensy::serial7Base = {
-        6,
         &IMXRT_LPUART7,
-        IRQ_LPUART7,
         DMAMUX_SOURCE_LPUART7_TX,
         DMAMUX_SOURCE_LPUART7_RX,
         CCM_CCGR5,
         CCM_CCGR5_LPUART7(CCM_CCGR_ON),
         {{28,2, &IOMUXC_LPUART7_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
         {{29,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        0xff, // No CTS pin
-        0, // No CTS
-        IRQ_PRIORITY, 38, 24, // IRQ, rts_low_watermark, rts_high_watermark
 };
 
 const DmaSerialTeensy::Base_t* DmaSerialTeensy::allSerialBases[7] = {
