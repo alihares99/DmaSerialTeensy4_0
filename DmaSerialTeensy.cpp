@@ -23,7 +23,7 @@
 // *********************************************************************************************************
 
 // teensy 4.0 specific board information:
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial1Base = {
+const DmaSerial::Base_t DmaSerial::serial1Base = {
         &IMXRT_LPUART6,
         DMAMUX_SOURCE_LPUART6_RX,
         DMAMUX_SOURCE_LPUART6_TX,
@@ -33,7 +33,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial1Base = {
         {{1,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial2Base = {
+const DmaSerial::Base_t DmaSerial::serial2Base = {
         &IMXRT_LPUART4,
         DMAMUX_SOURCE_LPUART4_RX,
         DMAMUX_SOURCE_LPUART4_TX,
@@ -48,7 +48,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial2Base = {
         #endif
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial3Base = {
+const DmaSerial::Base_t DmaSerial::serial3Base = {
         &IMXRT_LPUART2,
         DMAMUX_SOURCE_LPUART2_RX,
         DMAMUX_SOURCE_LPUART2_TX,
@@ -58,7 +58,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial3Base = {
         {{14,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial4Base = {
+const DmaSerial::Base_t DmaSerial::serial4Base = {
         &IMXRT_LPUART3,
         DMAMUX_SOURCE_LPUART3_RX,
         DMAMUX_SOURCE_LPUART3_TX,
@@ -68,7 +68,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial4Base = {
         {{17,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial5Base = {
+const DmaSerial::Base_t DmaSerial::serial5Base = {
         &IMXRT_LPUART8,
         DMAMUX_SOURCE_LPUART8_RX,
         DMAMUX_SOURCE_LPUART8_TX,
@@ -78,7 +78,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial5Base = {
         {{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {39, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial6Base = {
+const DmaSerial::Base_t DmaSerial::serial6Base = {
         &IMXRT_LPUART1,
         DMAMUX_SOURCE_LPUART1_RX,
         DMAMUX_SOURCE_LPUART1_TX,
@@ -88,7 +88,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial6Base = {
         {{24,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
 };
 
-const DmaSerialTeensy::Base_t DmaSerialTeensy::serial7Base = {
+const DmaSerial::Base_t DmaSerial::serial7Base = {
         &IMXRT_LPUART7,
         DMAMUX_SOURCE_LPUART7_TX,
         DMAMUX_SOURCE_LPUART7_RX,
@@ -98,7 +98,7 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial7Base = {
         {{29,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
 };
 
-const DmaSerialTeensy::Base_t* DmaSerialTeensy::allSerialBases[7] = {
+const DmaSerial::Base_t* DmaSerial::allSerialBases[7] = {
         &serial1Base,
         &serial2Base,
         &serial3Base,
@@ -108,14 +108,14 @@ const DmaSerialTeensy::Base_t* DmaSerialTeensy::allSerialBases[7] = {
         &serial7Base,
 };
 
-DmaSerialTeensy dmaSerial1(1);
-DmaSerialTeensy dmaSerial2(2);
-DmaSerialTeensy dmaSerial3(3);
-DmaSerialTeensy dmaSerial4(4);
-DmaSerialTeensy dmaSerial5(5);
-DmaSerialTeensy dmaSerial6(6);
-DmaSerialTeensy dmaSerial7(7);
-const DmaSerialTeensy* DmaSerialTeensy::dmaSerials[7] = {
+DmaSerial dmaSerial1(1);
+DmaSerial dmaSerial2(2);
+DmaSerial dmaSerial3(3);
+DmaSerial dmaSerial4(4);
+DmaSerial dmaSerial5(5);
+DmaSerial dmaSerial6(6);
+DmaSerial dmaSerial7(7);
+const DmaSerial* DmaSerial::dmaSerials[7] = {
         &dmaSerial1,
         &dmaSerial2,
         &dmaSerial3,
@@ -128,14 +128,14 @@ const DmaSerialTeensy* DmaSerialTeensy::dmaSerials[7] = {
 #error "no supported board"
 #endif
 
-void DmaSerialTeensy::txCompleteCallback1() {dmaSerial1.txIsr();}
-void DmaSerialTeensy::txCompleteCallback2() {dmaSerial2.txIsr();}
-void DmaSerialTeensy::txCompleteCallback3() {dmaSerial3.txIsr();}
-void DmaSerialTeensy::txCompleteCallback4() {dmaSerial4.txIsr();}
-void DmaSerialTeensy::txCompleteCallback5() {dmaSerial5.txIsr();}
-void DmaSerialTeensy::txCompleteCallback6() {dmaSerial6.txIsr();}
-void DmaSerialTeensy::txCompleteCallback7() {dmaSerial7.txIsr();}
-void (* const DmaSerialTeensy::allTxIsr[7])() = {
+void DmaSerial::txCompleteCallback1() {dmaSerial1.txIsr();}
+void DmaSerial::txCompleteCallback2() {dmaSerial2.txIsr();}
+void DmaSerial::txCompleteCallback3() {dmaSerial3.txIsr();}
+void DmaSerial::txCompleteCallback4() {dmaSerial4.txIsr();}
+void DmaSerial::txCompleteCallback5() {dmaSerial5.txIsr();}
+void DmaSerial::txCompleteCallback6() {dmaSerial6.txIsr();}
+void DmaSerial::txCompleteCallback7() {dmaSerial7.txIsr();}
+void (* const DmaSerial::allTxIsr[7])() = {
         txCompleteCallback1,
         txCompleteCallback2,
         txCompleteCallback3,
@@ -145,7 +145,7 @@ void (* const DmaSerialTeensy::allTxIsr[7])() = {
         txCompleteCallback7,
 };
 
-DmaSerialTeensy::DmaSerialTeensy(int serialNo)
+DmaSerial::DmaSerial(int serialNo)
     : serialNo(serialNo)
 {
     serialBase = allSerialBases[serialNo - 1];
@@ -160,7 +160,7 @@ DmaSerialTeensy::DmaSerialTeensy(int serialNo)
 }
 
 
-void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
+void DmaSerial::begin(uint32_t baud, uint16_t format) {
 
     if (!txBuffer) {
         txBuffer = new uint8_t[DMA_TX_BUFFER_SIZE];
@@ -272,7 +272,7 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
  * Number of bytes in the buffer
  * @return 0 to 2047
  */
-int DmaSerialTeensy::available() {
+int DmaSerial::available() {
     auto biter = dmaChannelReceive->TCD->BITER;
     auto citer = dmaChannelReceive->TCD->CITER;
     auto csr = dmaChannelReceive->TCD->CSR;
@@ -288,27 +288,27 @@ int DmaSerialTeensy::available() {
     }
 }
 
-int DmaSerialTeensy::read() {
+int DmaSerial::read() {
     uint8_t c = rxBuffer[rxBufferTail++];
     if (rxBufferTail >= DMA_RX_BUFFER_SIZE)
         rxBufferTail -= DMA_RX_BUFFER_SIZE;
     return c;
 }
 
-int DmaSerialTeensy::peek() {
+int DmaSerial::peek() {
     return rxBuffer[rxBufferTail];
 }
 
-size_t DmaSerialTeensy::write(uint8_t c) {
+size_t DmaSerial::write(uint8_t c) {
     write(&c, 1);
     return 1;
 }
 
-size_t DmaSerialTeensy::write(char c) {
+size_t DmaSerial::write(char c) {
     return write((uint8_t *)&c, 1);
 }
 
-size_t DmaSerialTeensy::write(const uint8_t *p, size_t len) {
+size_t DmaSerial::write(const uint8_t *p, size_t len) {
 
     size_t index = 0;
     while (index < len) {
@@ -348,7 +348,7 @@ size_t DmaSerialTeensy::write(const uint8_t *p, size_t len) {
 
 }
 
-void DmaSerialTeensy::txIsr() {
+void DmaSerial::txIsr() {
     dmaChannelSend->clearInterrupt();
 
     // move the tail:

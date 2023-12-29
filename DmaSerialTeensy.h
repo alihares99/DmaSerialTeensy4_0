@@ -17,7 +17,7 @@
 
 #define DMA_MAX_BURST_DATA_TRANSFER 511         // This is the maximum data we are putting into DMA at once
 
-class DmaSerialTeensy : public Stream {
+class DmaSerial : public Stream {
 
 private:
 
@@ -48,7 +48,7 @@ private:
     const static Base_t serial6Base;
     const static Base_t serial7Base;
     const static Base_t* allSerialBases[7];
-    const static DmaSerialTeensy* dmaSerials[7];
+    const static DmaSerial* dmaSerials[7];
 
     static void txCompleteCallback1();
     static void txCompleteCallback2();
@@ -81,7 +81,7 @@ private:
 
 public:
 
-    explicit DmaSerialTeensy(int serialNo);
+    explicit DmaSerial(int serialNo);
     int peek() override;
     void begin(uint32_t baud, uint16_t format = 0);
     int available() override;
@@ -98,12 +98,12 @@ public:
 
 #if defined(__IMXRT1062__)
 
-extern DmaSerialTeensy dmaSerial1;
-extern DmaSerialTeensy dmaSerial2;
-extern DmaSerialTeensy dmaSerial3;
-extern DmaSerialTeensy dmaSerial4;
-extern DmaSerialTeensy dmaSerial5;
-extern DmaSerialTeensy dmaSerial6;
-extern DmaSerialTeensy dmaSerial7;
+extern DmaSerial dmaSerial1;
+extern DmaSerial dmaSerial2;
+extern DmaSerial dmaSerial3;
+extern DmaSerial dmaSerial4;
+extern DmaSerial dmaSerial5;
+extern DmaSerial dmaSerial6;
+extern DmaSerial dmaSerial7;
 
 #endif
