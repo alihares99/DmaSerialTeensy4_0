@@ -3,7 +3,7 @@
  * You are free to use this file in any project as long as you keep my email address alihares99@gmail.com here.
  */
 
-#include "DmaSerialTeensy.h"
+#include "DmaSerial.h"
 #include "Arduino.h"
 #include <cstring>
 #include <cmath>

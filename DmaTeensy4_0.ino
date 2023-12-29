@@ -1,5 +1,5 @@
 
-#include "DmaSerialTeensy.h"
+#include "DmaSerial.h"
 #include "HardwareSerial.h"
 #include "usb_serial.h"
 #include "Arduino.h"

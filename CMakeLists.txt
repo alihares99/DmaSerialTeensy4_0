@@ -7,7 +7,7 @@ set(TeensyDir C:/Users/Ali/AppData/Local/Arduino15/packages/teensy/hardware/avr/
 
 add_executable(${project_name}
         DmaTeensy4_0.ino
-        DmaSerialTeensy.cpp DmaSerialTeensy.h
+        DmaSerial.cpp DmaSerial.h
 
         ${TeensyDir}/analog.c
         ${TeensyDir}/bootdata.c
