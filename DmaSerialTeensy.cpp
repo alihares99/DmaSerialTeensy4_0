@@ -28,10 +28,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial1Base = {
         0,
         &IMXRT_LPUART6,
         IRQ_LPUART6,
-        #if defined(__IMXRT1062__)  // teensy 4.0
         DMAMUX_SOURCE_LPUART6_RX,
         DMAMUX_SOURCE_LPUART6_TX,
-        #endif
         CCM_CCGR3,
         CCM_CCGR3_LPUART6(CCM_CCGR_ON),
         {{0,2, &IOMUXC_LPUART6_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
@@ -103,10 +101,8 @@ const DmaSerialTeensy::Base_t DmaSerialTeensy::serial5Base = {
         4,
         &IMXRT_LPUART8,
         IRQ_LPUART8,
-        #ifdef __IMXRT1062__  // teensy 4.0
         DMAMUX_SOURCE_LPUART8_RX,
         DMAMUX_SOURCE_LPUART8_TX,
-        #endif
         CCM_CCGR6,
         CCM_CCGR6_LPUART8(CCM_CCGR_ON),
         {{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {38, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
@@ -246,7 +242,7 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
     rxBufferTail = 0;
     // rxBufferHead = 0; // no need for this
 
-    // HARES calculate baudrate:
+    // calculate baudrate:
     float base = (float)UART_CLOCK / (float)baud;
     float besterr = 1e20;
     int bestdiv = 1;
@@ -264,28 +260,6 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
             bestosr = osr;
         }
     }
-
-    // Hardcoded values for dmaSerial1. Just for test.
-    /*
-    CCM_CCGR3 |= CCM_CCGR3_LPUART6(CCM_CCGR_ON);
-    IMXRT_LPUART6.CTRL = 0;
-    *(portControlRegister(0)) = IOMUXC_PAD_DSE(7) | IOMUXC_PAD_PKE | IOMUXC_PAD_PUE | IOMUXC_PAD_PUS(3) | IOMUXC_PAD_HYS;
-    *(portConfigRegister(0)) = 2;
-    IOMUXC_LPUART6_RX_SELECT_INPUT = 1;
-
-    // config Tx Pin:
-    *(portControlRegister(1)) =  IOMUXC_PAD_SRE | IOMUXC_PAD_DSE(3) | IOMUXC_PAD_SPEED(3);
-    *(portConfigRegister(1)) = 2;
-    // IOMUXC_LPUART6_TX_SELECT_INPUT = 1;
-
-    serial1Base.port->BAUD = LPUART_BAUD_OSR(bestosr - 1) | LPUART_BAUD_SBR(bestdiv);
-    serial1Base.port->PINCFG = 0;
-    serial1Base.port->BAUD |= (LPUART_BAUD_TDMAE | LPUART_BAUD_RDMAE | (1 << 20));
-    serial1Base.port->FIFO &= ~(LPUART_FIFO_TXFE | LPUART_FIFO_RXFE);
-
-    uint32_t ctrl = CTRL_ENABLE;// | LPUART_CTRL_RIE | LPUART_CTRL_TIE | LPUART_CTRL_ILIE;
-    serial1Base.port->CTRL = ctrl;
-    */
 
     // turn on clock for UART:
     serialBase->ccm_register |= serialBase->ccm_value;
@@ -307,24 +281,10 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
     serialBase->port->BAUD = LPUART_BAUD_OSR(bestosr - 1) | LPUART_BAUD_SBR(bestdiv);
     serialBase->port->PINCFG = 0;
 
-    // HARES: disabling the interrupt parts:
-    // Enable the transmitter, receiver and enable receiver interrupt
-    // attachInterruptVector(serialBase->irq, serialBase->irq_handler);
-    // NVIC_SET_PRIORITY(serialBase->irq, serialBase->irq_priority);	// maybe should put into hardware...
-    // NVIC_ENABLE_IRQ(serialBase->irq);
-
-    // HARES: enabling DMA instead:
+    // enabling DMA instead:
     serialBase->port->BAUD |= (LPUART_BAUD_TDMAE | LPUART_BAUD_RDMAE);
 
-    // HARES: it seems that the rx_fifo_size and tx_fifo_size differs from the actual size based on the datasheet
-    // uint16_t tx_fifo_size = (((serialBase->port->FIFO >> 4) & 0x7) << 2);
-    // uint8_t tx_water = (tx_fifo_size < 16) ? tx_fifo_size >> 1 : 7;
-    // uint16_t rx_fifo_size = (((serialBase->port->FIFO >> 0) & 0x7) << 2);
-    // uint8_t rx_water = (rx_fifo_size < 16) ? rx_fifo_size >> 1 : 7;
-    // serialBase->port->WATER = LPUART_WATER_RXWATER(rx_water) | LPUART_WATER_TXWATER(tx_water);
-    // serialBase->port->FIFO |= LPUART_FIFO_TXFE | LPUART_FIFO_RXFE;
-
-    // HARES: disabling FIFO:
+    // disabling FIFO:
     serialBase->port->FIFO &= ~(LPUART_FIFO_TXFE | LPUART_FIFO_RXFE);
 
     // lets configure up our CTRL register value
@@ -361,16 +321,16 @@ void DmaSerialTeensy::begin(uint32_t baud, uint16_t format) {
  * @return 0 to 2047
  */
 int DmaSerialTeensy::available() {
-    int biter = dmaChannelReceive->TCD->BITER;
-    int citer = dmaChannelReceive->TCD->CITER;
-    int csr = dmaChannelReceive->TCD->CSR;
+    auto biter = dmaChannelReceive->TCD->BITER;
+    auto citer = dmaChannelReceive->TCD->CITER;
+    auto csr = dmaChannelReceive->TCD->CSR;
     if (csr & 0x80) { // done so Rx buffer is full
         if (rxBufferTail == 0) return 0;
         else return DMA_RX_BUFFER_SIZE - rxBufferTail;
     }
     else {
         // our version of buffer indexes are not update
-        int head = biter - citer;
+        size_t head = biter - citer;
         if (head >= rxBufferTail) return head - rxBufferTail;
         else return head - rxBufferTail + DMA_RX_BUFFER_SIZE;
     }

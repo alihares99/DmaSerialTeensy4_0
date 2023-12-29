@@ -84,7 +84,6 @@ private:
     DMAChannel* dmaChannelSend = nullptr;
     DMAChannel* dmaChannelReceive = nullptr;
 
-    void rxIsr();
     void txIsr();
 
 public:
@@ -104,6 +103,8 @@ public:
     size_t write(int n)             { return write((uint8_t)n); }
 };
 
+#if defined(__IMXRT1062__)
+
 extern DmaSerialTeensy dmaSerial1;
 extern DmaSerialTeensy dmaSerial2;
 extern DmaSerialTeensy dmaSerial3;
@@ -112,3 +113,4 @@ extern DmaSerialTeensy dmaSerial5;
 extern DmaSerialTeensy dmaSerial6;
 extern DmaSerialTeensy dmaSerial7;
 
+#endif
