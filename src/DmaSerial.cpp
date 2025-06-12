@@ -39,13 +39,8 @@ const DmaSerial::Base_t DmaSerial::serial2Base = {
         DMAMUX_SOURCE_LPUART4_TX,
         CCM_CCGR1,
         CCM_CCGR1_LPUART4(CCM_CCGR_ON),
-        #if defined(__IMXRT1052__)
-        {{6,2, &IOMUXC_LPUART4_RX_SELECT_INPUT, 2}, {0xff, 0xff, nullptr, 0}},
-	    {{7,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        #elif defined(__IMXRT1062__)
         {{7,2, &IOMUXC_LPUART4_RX_SELECT_INPUT, 2}, {0xff, 0xff, nullptr, 0}},
         {{8,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        #endif
 };
 
 const DmaSerial::Base_t DmaSerial::serial3Base = {

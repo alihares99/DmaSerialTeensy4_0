@@ -21,16 +21,16 @@ class DmaSerial : public Stream {
 
 private:
 
-    static const uint8_t cnt_tx_pins = 2;
-    static const uint8_t cnt_rx_pins = 2;
-    typedef struct {
+    static constexpr uint8_t cnt_tx_pins = 2;
+    static constexpr uint8_t cnt_rx_pins = 2;
+    struct pin_info_t {
         const uint8_t 		pin;		// The pin number
         const uint32_t 		mux_val;	// Value to set for mux;
         volatile uint32_t	*select_input_register; // Which register controls the selection
         const uint32_t		select_val;	// Value for that selection
-    } pin_info_t;
+    };
 
-    typedef struct {
+    struct Base_t {
         IMXRT_LPUART_t* port;
         uint8_t dmaMuxSourceRx;
         uint8_t dmaMuxSourceTx;
@@ -38,7 +38,7 @@ private:
         const uint32_t ccm_value;
         pin_info_t rx_pins[cnt_rx_pins];
         pin_info_t tx_pins[cnt_tx_pins];
-    } Base_t;
+    };
 
     const static Base_t serial1Base;
     const static Base_t serial2Base;
@@ -69,7 +69,6 @@ private:
     volatile size_t txBufferHead;
     volatile size_t txBufferCount;
     volatile size_t rxBufferTail;
-    // volatile uint32_t rxBufferHead; // no need for this
 
     volatile bool transmitting = false;
 

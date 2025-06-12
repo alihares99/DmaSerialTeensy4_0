@@ -151,6 +151,9 @@ add_executable(${project_name}
 
         )
 
-include_directories(${TeensyDir})
+include_directories(
+        ${TeensyDir}
+        src/
+)
 add_definitions(-D__IMXRT1062__ -DARDUINO_TEENSY40 -DUSB_SERIAL -DTEENSYDUINO=158 -DF_CPU=180000000 -D__cplusplus)
 include_directories(libs)
