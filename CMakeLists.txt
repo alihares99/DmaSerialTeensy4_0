@@ -3,11 +3,11 @@ set(project_name dma_for_teensy)
 project(${project_name})
 
 set(CMAKE_CXX_STANDARD 14)
-set(TeensyDir C:/Users/Ali/AppData/Local/Arduino15/packages/teensy/hardware/avr/1.58.1/cores/teensy4)
+set(TeensyDir C:/Users/Hares/AppData/Local/Arduino15/packages/teensy/hardware/avr/1.59.0/cores/teensy4)
 
 add_executable(${project_name}
-        DmaTeensy4_0.ino
-        DmaSerial.cpp DmaSerial.h
+        examples/example1/example1.ino
+        src/DmaSerial.cpp src/DmaSerial.h
 
         ${TeensyDir}/analog.c
         ${TeensyDir}/bootdata.c
