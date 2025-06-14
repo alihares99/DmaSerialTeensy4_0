@@ -4,7 +4,7 @@
  */
 
 #include "DmaSerial.h"
-#include "Arduino.h"
+#include <Arduino.h>
 #include <cstring>
 #include <cmath>
 #include <algorithm>
@@ -15,83 +15,7 @@
 
 #define CTRL_ENABLE 		(LPUART_CTRL_TE | LPUART_CTRL_RE)
 
-// *********************************************************************************************************
-// ** There is a fatal bug in imxrt.h that DMAMUX_SOURCE_LPUARTx_RX and DMAMUX_SOURCE_LPUARTx_TX values
-// ** are incorrect. They should swap their values in imxrt.h file. This bug took me 6 hours to find!
-// ** This is probably because this library was originally written for imxrt1052 micro and they forgot
-// ** to add the necessary changes to support imxrt1062 which is the micro on teensy 4.0.
-// *********************************************************************************************************
-
 // teensy 4.0 specific board information:
-const DmaSerial::Base_t DmaSerial::serial1Base = {
-        &IMXRT_LPUART6,
-        DMAMUX_SOURCE_LPUART6_RX,
-        DMAMUX_SOURCE_LPUART6_TX,
-        CCM_CCGR3,
-        CCM_CCGR3_LPUART6(CCM_CCGR_ON),
-        {{0,2, &IOMUXC_LPUART6_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
-        {{1,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial2Base = {
-        &IMXRT_LPUART4,
-        DMAMUX_SOURCE_LPUART4_RX,
-        DMAMUX_SOURCE_LPUART4_TX,
-        CCM_CCGR1,
-        CCM_CCGR1_LPUART4(CCM_CCGR_ON),
-        {{7,2, &IOMUXC_LPUART4_RX_SELECT_INPUT, 2}, {0xff, 0xff, nullptr, 0}},
-        {{8,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial3Base = {
-        &IMXRT_LPUART2,
-        DMAMUX_SOURCE_LPUART2_RX,
-        DMAMUX_SOURCE_LPUART2_TX,
-        CCM_CCGR0,
-        CCM_CCGR0_LPUART2(CCM_CCGR_ON),
-        {{15,2, &IOMUXC_LPUART2_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
-        {{14,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial4Base = {
-        &IMXRT_LPUART3,
-        DMAMUX_SOURCE_LPUART3_RX,
-        DMAMUX_SOURCE_LPUART3_TX,
-        CCM_CCGR0,
-        CCM_CCGR0_LPUART3(CCM_CCGR_ON),
-        {{16,2, &IOMUXC_LPUART3_RX_SELECT_INPUT, 0}, {0xff, 0xff, nullptr, 0}},
-        {{17,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial5Base = {
-        &IMXRT_LPUART8,
-        DMAMUX_SOURCE_LPUART8_RX,
-        DMAMUX_SOURCE_LPUART8_TX,
-        CCM_CCGR6,
-        CCM_CCGR6_LPUART8(CCM_CCGR_ON),
-        {{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {38, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
-        {{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {39, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial6Base = {
-        &IMXRT_LPUART1,
-        DMAMUX_SOURCE_LPUART1_RX,
-        DMAMUX_SOURCE_LPUART1_TX,
-        CCM_CCGR5,
-        CCM_CCGR5_LPUART1(CCM_CCGR_ON),
-        {{25,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-        {{24,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
-
-const DmaSerial::Base_t DmaSerial::serial7Base = {
-        &IMXRT_LPUART7,
-        DMAMUX_SOURCE_LPUART7_TX,
-        DMAMUX_SOURCE_LPUART7_RX,
-        CCM_CCGR5,
-        CCM_CCGR5_LPUART7(CCM_CCGR_ON),
-        {{28,2, &IOMUXC_LPUART7_RX_SELECT_INPUT, 1}, {0xff, 0xff, nullptr, 0}},
-        {{29,2, nullptr, 0}, {0xff, 0xff, nullptr, 0}},
-};
 
 const DmaSerial::Base_t* DmaSerial::allSerialBases[7] = {
         &serial1Base,
@@ -168,7 +92,6 @@ void DmaSerial::begin(uint32_t baud, uint16_t format) {
     if (!dmaChannelSend) {
         dmaChannelSend = new DMAChannel();
         dmaChannelSend->destination(*(uint8_t*)&serialBase->port->DATA);
-        // source is not configured here
         dmaChannelSend->triggerAtHardwareEvent(serialBase->dmaMuxSourceTx);
         dmaChannelSend->attachInterrupt(allTxIsr[serialNo - 1]);
         dmaChannelSend->interruptAtCompletion();

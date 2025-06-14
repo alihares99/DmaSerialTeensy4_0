@@ -1,0 +1,24 @@
+/**
+ * Created by Hares.
+ * You are free to use this file in any project as long as you keep my email address alihares99@gmail.com here.
+ */
+
+ #include "DmaSerial.h"
+
+const DmaSerial::Base_t DmaSerial::serial5Base = {
+	&IMXRT_LPUART8,
+	DMAMUX_SOURCE_LPUART8_RX,
+	DMAMUX_SOURCE_LPUART8_TX,
+	CCM_CCGR6,
+	CCM_CCGR6_LPUART8(CCM_CCGR_ON),
+	#if defined(ARDUINO_TEENSY41)
+	{{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {46, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
+	{{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {47, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
+	#elif defined(ARDUINO_TEENSY40)
+	{{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {38, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
+	{{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {39, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
+	#else // ARDUINO_TEENSY_MICROMOD
+	{{21,2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 1}, {39, 2, &IOMUXC_LPUART8_RX_SELECT_INPUT, 0}},
+	{{20,2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 1}, {38, 2, &IOMUXC_LPUART8_TX_SELECT_INPUT, 0}},
+	#endif
+};

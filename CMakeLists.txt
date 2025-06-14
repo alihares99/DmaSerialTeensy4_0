@@ -7,7 +7,16 @@ set(TeensyDir C:/Users/Hares/AppData/Local/Arduino15/packages/teensy/hardware/av
 
 add_executable(${project_name}
         examples/example1/example1.ino
-        src/DmaSerial.cpp src/DmaSerial.h
+        src/DmaSerial.h
+        src/DmaSerial.cpp
+        src/DmaSerial1.cpp
+        src/DmaSerial2.cpp
+        src/DmaSerial3.cpp
+        src/DmaSerial4.cpp
+        src/DmaSerial5.cpp
+        src/DmaSerial6.cpp
+        src/DmaSerial7.cpp
+        src/DmaSerial8.cpp
 
         ${TeensyDir}/analog.c
         ${TeensyDir}/bootdata.c
